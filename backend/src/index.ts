@@ -4,6 +4,7 @@
  */
 import express from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { initCloudinary } from './services/cloudinary';
 import imageRoutes from './routes/images';
@@ -25,8 +26,15 @@ app.use(
 );
 app.use(express.json());
 
+// Rate limiting for API routes
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 20, // 20 requests per minute
+  message: { success: false, error: 'Too many requests, please try again later' },
+});
+
 // Routes
-app.use('/api/images', imageRoutes);
+app.use('/api/images', apiLimiter, imageRoutes);
 
 // Health check
 app.get('/health', (_req, res) => {
