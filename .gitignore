@@ -6,3 +6,10 @@ dist/
 .claude/
 coverage/
 description.txt
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/terraform.tfvars
+terraform/.terraform.lock.hcl
