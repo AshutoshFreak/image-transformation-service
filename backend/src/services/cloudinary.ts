@@ -1,6 +1,14 @@
+/**
+ * Cloudinary integration for image storage and CDN delivery.
+ */
 import { v2 as cloudinary } from 'cloudinary';
 import { Readable } from 'stream';
 
+/**
+ * Initialize Cloudinary with credentials from environment variables.
+ * Must be called before any upload/delete operations.
+ * @throws Error if credentials are missing
+ */
 export function initCloudinary(): void {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const apiKey = process.env.CLOUDINARY_API_KEY;
@@ -17,6 +25,12 @@ export function initCloudinary(): void {
   });
 }
 
+/**
+ * Upload a processed image to Cloudinary.
+ * @param imageBuffer - The image data as a Buffer
+ * @param filename - Original filename (used to generate public ID)
+ * @returns Object with CDN URL and public ID for future reference/deletion
+ */
 export async function uploadImage(
   imageBuffer: Buffer,
   filename: string
@@ -47,6 +61,10 @@ export async function uploadImage(
   });
 }
 
+/**
+ * Delete an image from Cloudinary and invalidate CDN cache.
+ * @param publicId - The Cloudinary public ID of the image
+ */
 export async function deleteImage(publicId: string): Promise<void> {
   await cloudinary.uploader.destroy(publicId, { invalidate: true });
 }

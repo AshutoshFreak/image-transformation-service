@@ -1,3 +1,7 @@
+/**
+ * Shared TypeScript interfaces for API requests and responses.
+ */
+
 export interface ProcessedImage {
   id: string;
   originalName: string;

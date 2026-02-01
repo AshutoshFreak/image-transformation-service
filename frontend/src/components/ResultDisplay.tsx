@@ -1,3 +1,6 @@
+/**
+ * Displays processed images with gallery navigation, download, copy URL, and delete actions.
+ */
 import { useState, useRef } from 'react';
 
 interface ProcessedImage {

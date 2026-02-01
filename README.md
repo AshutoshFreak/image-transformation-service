@@ -124,7 +124,7 @@ npm run dev
 
 ## Deployment (AWS)
 
-See [terraform/](terraform/) directory for infrastructure code.
+See [terraform/README.md](terraform/README.md) for full infrastructure documentation.
 
 ### Quick Deploy
 

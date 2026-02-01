@@ -1,3 +1,7 @@
+/**
+ * Main application component.
+ * Manages image upload state and orchestrates the upload/display flow.
+ */
 import { useState } from 'react';
 import { ImageUploader } from './components/ImageUploader';
 import { ResultDisplay } from './components/ResultDisplay';

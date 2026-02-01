@@ -1,7 +1,16 @@
+/**
+ * Background removal service using Clipdrop API.
+ */
 import axios from 'axios';
 
 const CLIPDROP_API_URL = 'https://clipdrop-api.co/remove-background/v1';
 
+/**
+ * Remove the background from an image using Clipdrop's AI API.
+ * @param imageBuffer - The source image as a Buffer
+ * @returns Buffer containing the image with transparent background (PNG)
+ * @throws Error if API key is missing or API request fails
+ */
 export async function removeBackground(imageBuffer: Buffer): Promise<Buffer> {
   const apiKey = process.env.CLIPDROP_API_KEY;
 

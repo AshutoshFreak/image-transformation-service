@@ -1,3 +1,7 @@
+/**
+ * File upload middleware configuration.
+ * Uses memory storage to pass image buffers directly to processing pipeline.
+ */
 import multer from 'multer';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];

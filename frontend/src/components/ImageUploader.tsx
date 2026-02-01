@@ -1,3 +1,6 @@
+/**
+ * Drag-and-drop image uploader with loading state preview.
+ */
 import { useCallback, useState } from 'react';
 
 interface ImageUploaderProps {

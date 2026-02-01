@@ -1,3 +1,7 @@
+/**
+ * Express server entry point.
+ * Sets up CORS, routes, and error handling for the image processing API.
+ */
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
