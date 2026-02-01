@@ -9,6 +9,7 @@ A full-stack application for uploading images, removing backgrounds, applying ho
 - **Horizontal Flip**: Automatically flips processed images
 - **Cloud Hosting**: Processed images hosted on Cloudinary with unique URLs
 - **Image Deletion**: Delete images from cloud storage with CDN cache invalidation
+- **Rate Limiting**: API protection against abuse (20 requests/minute)
 
 ## Tech Stack
 
@@ -126,7 +127,7 @@ npm run dev
 
 See [terraform/README.md](terraform/README.md) for full infrastructure documentation.
 
-### Quick Deploy
+### Initial Infrastructure Setup
 
 ```bash
 cd terraform
@@ -137,9 +138,22 @@ terraform init
 terraform apply
 ```
 
-### Push Docker Images
+### CI/CD (GitHub Actions)
 
-After `terraform apply`, use the output commands to push images:
+The project includes a GitHub Actions workflow that automatically:
+- Runs tests on every push/PR
+- Builds and pushes Docker images to ECR on push to `main`
+- Deploys to ECS
+
+**Setup**: Add these secrets to your GitHub repository (Settings → Secrets → Actions):
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+
+Once configured, pushing to `main` triggers automatic deployment.
+
+### Manual Deployment
+
+If you prefer manual deployment:
 
 ```bash
 # Login to ECR
@@ -152,7 +166,7 @@ docker push <backend-ecr-url>:latest
 docker build -t <frontend-ecr-url>:latest ./frontend
 docker push <frontend-ecr-url>:latest
 
-# Force ECS to deploy new images
+# Deploy to ECS
 aws ecs update-service --cluster image-transformation-cluster --service image-transformation --force-new-deployment
 ```
 
