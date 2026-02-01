@@ -1,3 +1,7 @@
+/**
+ * Main application component.
+ * Manages image upload state and orchestrates the upload/display flow.
+ */
 import { useState } from 'react';
 import { ImageUploader } from './components/ImageUploader';
 import { ResultDisplay } from './components/ResultDisplay';
@@ -14,11 +18,13 @@ function App() {
   const [isUploading, setIsUploading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [processedImage, setProcessedImage] = useState<ProcessedImage | null>(
-    null
-  );
+  const [images, setImages] = useState<ProcessedImage[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const handleUpload = async (file: File) => {
+    const preview = URL.createObjectURL(file);
+    setPreviewUrl(preview);
     setIsUploading(true);
     setError(null);
 
@@ -26,56 +32,71 @@ function App() {
       const response = await uploadImage(file);
 
       if (response.success && response.data) {
-        setProcessedImage({
+        const newImage = {
           id: response.data.id,
           url: response.data.url,
           originalName: response.data.originalName,
+        };
+        setImages(prev => {
+          const updated = [...prev, newImage];
+          setCurrentIndex(updated.length - 1);
+          return updated;
         });
       } else {
         setError(response.error || 'Failed to process image');
       }
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to upload image';
+      const message = err instanceof Error ? err.message : 'Failed to upload image';
       setError(message);
     } finally {
       setIsUploading(false);
+      URL.revokeObjectURL(preview);
+      setPreviewUrl(null);
     }
   };
 
   const handleDelete = async () => {
-    if (!processedImage) return;
+    const currentImage = images[currentIndex];
+    if (!currentImage) return;
 
     setIsDeleting(true);
     setError(null);
 
     try {
-      const response = await deleteImage(processedImage.id);
+      const response = await deleteImage(currentImage.id);
 
       if (response.success) {
-        setProcessedImage(null);
+        const newImages = images.filter((_, i) => i !== currentIndex);
+        setImages(newImages);
+
+        if (newImages.length === 0) {
+          setCurrentIndex(0);
+        } else if (currentIndex >= newImages.length) {
+          setCurrentIndex(newImages.length - 1);
+        }
       } else {
         setError(response.error || 'Failed to delete image');
       }
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to delete image';
+      const message = err instanceof Error ? err.message : 'Failed to delete image';
       setError(message);
     } finally {
       setIsDeleting(false);
     }
   };
 
-  const handleReset = () => {
-    setProcessedImage(null);
-    setError(null);
+  const handleSelectImage = (index: number) => {
+    setCurrentIndex(index);
   };
+
+  const currentImage = images[currentIndex];
+  const showUploader = images.length === 0;
 
   return (
     <div className="app">
       <header>
-        <h1>Image Transformation Service</h1>
-        <p>Remove background and flip your images horizontally</p>
+        <h1>Remove Background & Flip</h1>
+        <p>Transform your images instantly</p>
       </header>
 
       <main>
@@ -86,17 +107,32 @@ function App() {
           </div>
         )}
 
-        {processedImage ? (
-          <ResultDisplay
-            imageUrl={processedImage.url}
-            imageId={processedImage.id}
-            originalName={processedImage.originalName}
-            onDelete={handleDelete}
-            onReset={handleReset}
-            isDeleting={isDeleting}
-          />
+        {showUploader ? (
+          <>
+            <ImageUploader
+              onUpload={handleUpload}
+              isLoading={isUploading}
+              previewUrl={previewUrl}
+            />
+            {!isUploading && (
+              <div className="demo-image">
+                <img src="/demo.png" alt="Example: before and after" />
+              </div>
+            )}
+          </>
         ) : (
-          <ImageUploader onUpload={handleUpload} isLoading={isUploading} />
+          <ResultDisplay
+            imageUrl={currentImage.url}
+            imageId={currentImage.id}
+            originalName={currentImage.originalName}
+            onDelete={handleDelete}
+            onUpload={handleUpload}
+            isDeleting={isDeleting}
+            isUploading={isUploading}
+            images={images}
+            currentIndex={currentIndex}
+            onSelectImage={handleSelectImage}
+          />
         )}
       </main>
 

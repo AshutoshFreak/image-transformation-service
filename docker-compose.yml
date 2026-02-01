@@ -2,6 +2,7 @@ services:
   backend:
     build: ./backend
     ports:
+      - "80:80"    # Frontend nginx port (shared network)
       - "3000:3000"
     environment:
       - PORT=3000
@@ -14,8 +15,7 @@ services:
 
   frontend:
     build: ./frontend
-    ports:
-      - "80:80"
+    network_mode: "service:backend"  # Share network with backend (localhost:3000 works)
     depends_on:
       - backend
     restart: unless-stopped

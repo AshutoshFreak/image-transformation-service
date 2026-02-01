@@ -1,3 +1,9 @@
+/**
+ * Image processing API routes.
+ *
+ * POST /  - Upload image, remove background, flip, and store in Cloudinary
+ * DELETE /:id - Remove image from Cloudinary by public ID
+ */
 import { Router, Request, Response } from 'express';
 import { upload } from '../middleware/upload';
 import { removeBackground } from '../services/removeBg';
