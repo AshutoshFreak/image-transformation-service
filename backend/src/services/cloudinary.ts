@@ -48,5 +48,5 @@ export async function uploadImage(
 }
 
 export async function deleteImage(publicId: string): Promise<void> {
-  await cloudinary.uploader.destroy(publicId);
+  await cloudinary.uploader.destroy(publicId, { invalidate: true });
 }
