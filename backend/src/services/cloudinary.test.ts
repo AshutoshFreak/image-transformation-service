@@ -251,7 +251,8 @@ describe('cloudinary service', () => {
       await deleteImage('image-transformation/test-image');
 
       expect(cloudinary.uploader.destroy).toHaveBeenCalledWith(
-        'image-transformation/test-image'
+        'image-transformation/test-image',
+        { invalidate: true }
       );
     });
 
@@ -282,7 +283,8 @@ describe('cloudinary service', () => {
       await deleteImage('folder/sub-folder/image_123');
 
       expect(cloudinary.uploader.destroy).toHaveBeenCalledWith(
-        'folder/sub-folder/image_123'
+        'folder/sub-folder/image_123',
+        { invalidate: true }
       );
     });
 
@@ -293,7 +295,10 @@ describe('cloudinary service', () => {
 
       await deleteImage('folder%2Fimage');
 
-      expect(cloudinary.uploader.destroy).toHaveBeenCalledWith('folder%2Fimage');
+      expect(cloudinary.uploader.destroy).toHaveBeenCalledWith(
+        'folder%2Fimage',
+        { invalidate: true }
+      );
     });
   });
 });
