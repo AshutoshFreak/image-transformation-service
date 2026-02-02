@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: us-east-2
   ECS_CLUSTER: image-transformation-cluster
   ECS_SERVICE: image-transformation
 
