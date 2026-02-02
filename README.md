@@ -12,6 +12,10 @@ The frontend is built with React 19 and TypeScript, bundled with Vite. The backe
 
 For production, the app runs on AWS ECS Fargate behind an Application Load Balancer, with CloudFront providing HTTPS and CDN caching. Secrets are stored in Parameter Store, and the entire infrastructure is defined in Terraform. CI/CD is handled by GitHub Actions, which runs tests and auto-deploys on push to main.
 
+## Architecture
+
+![Architecture Diagram](https://drive.google.com/file/d/1s-dnPN3b94dPC8vjxvOA6m0ejoK74ZWi)
+
 ## CI/CD
 
 The GitHub Actions workflow in `.github/workflows/deploy.yml` handles continuous integration and deployment. On every push or PR to main, it runs the test suite. When code is merged to main, it builds Docker images, pushes them to ECR, and triggers an ECS deployment. The whole pipeline takes about 3-4 minutes from push to live.
