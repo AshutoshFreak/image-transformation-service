@@ -4,45 +4,30 @@ A full-stack application for uploading images, removing backgrounds, applying ho
 
 **Live Demo:** https://d5smvf35ewesl.cloudfront.net
 
-## Features
+## Overview
 
-- **Image Upload**: Drag-and-drop or click-to-upload interface
-- **Background Removal**: Integrates with Clipdrop API for AI-powered background removal
-- **Horizontal Flip**: Automatically flips processed images
-- **Cloud Hosting**: Processed images hosted on Cloudinary with unique URLs
-- **Image Deletion**: Delete images from cloud storage with CDN cache invalidation
-- **Rate Limiting**: API protection against abuse (20 requests/minute)
+Users can upload images through a drag-and-drop interface. The backend removes the background using the Clipdrop API, flips the image horizontally with Sharp, and uploads the result to Cloudinary. Each processed image gets a unique URL that users can copy or download. Images can also be deleted, which invalidates the CDN cache so they're immediately inaccessible. The API is rate-limited at 20 requests per minute.
 
-## Tech Stack
+The frontend is built with React 19 and TypeScript, bundled with Vite. The backend runs on Node.js 20 with Express, also in TypeScript. Everything is containerized with Docker using multi-stage builds for smaller production images.
 
-### Backend
-- **Runtime**: Node.js 20 with TypeScript
-- **Framework**: Express.js
-- **Image Processing**: Sharp (for horizontal flip)
-- **Cloud Storage**: Cloudinary
-- **Background Removal**: Clipdrop API
+For production, the app runs on AWS ECS Fargate behind an Application Load Balancer, with CloudFront providing HTTPS and CDN caching. Secrets are stored in Parameter Store, and the entire infrastructure is defined in Terraform. CI/CD is handled by GitHub Actions, which runs tests and auto-deploys on push to main.
 
-### Frontend
-- **Framework**: React 19 with TypeScript
-- **Build Tool**: Vite
-- **Styling**: CSS
+## CI/CD
 
-### Infrastructure
-- **Containerization**: Docker with multi-stage builds
-- **Orchestration**: Docker Compose (local) / AWS ECS Fargate (production)
-- **CDN/HTTPS**: AWS CloudFront
-- **Load Balancer**: AWS ALB
-- **Secrets Management**: AWS Parameter Store
-- **Container Registry**: AWS ECR
+The GitHub Actions workflow in `.github/workflows/deploy.yml` handles continuous integration and deployment. On every push or PR to main, it runs the test suite. When code is merged to main, it builds Docker images, pushes them to ECR, and triggers an ECS deployment. The whole pipeline takes about 3-4 minutes from push to live.
 
 ## Project Structure
 
 ```
 .
+├── .github/
+│   └── workflows/
+│       └── deploy.yml       # CI/CD pipeline
 ├── backend/
 │   ├── src/
 │   │   ├── routes/          # API endpoints
 │   │   ├── services/        # Business logic (Cloudinary, Clipdrop, image processing)
+│   │   ├── middleware/      # Upload handling, validation
 │   │   ├── types/           # TypeScript interfaces
 │   │   └── index.ts         # Express app setup
 │   ├── Dockerfile
@@ -56,10 +41,12 @@ A full-stack application for uploading images, removing backgrounds, applying ho
 │   ├── Dockerfile
 │   └── package.json
 ├── terraform/               # Infrastructure as Code
-│   ├── main.tf
-│   ├── ecs.tf
-│   ├── alb.tf
-│   ├── cloudfront.tf
+│   ├── main.tf              # Provider config
+│   ├── ecs.tf               # ECS cluster, task, service
+│   ├── alb.tf               # Load balancer
+│   ├── cloudfront.tf        # CDN and HTTPS
+│   ├── ecr.tf               # Container registries
+│   ├── secrets.tf           # Parameter Store
 │   └── ...
 └── docker-compose.yml       # Local development
 ```
