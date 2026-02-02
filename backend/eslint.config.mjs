@@ -14,5 +14,11 @@ export default tseslint.config(
         { argsIgnorePattern: '^_' },
       ],
     },
+  },
+  {
+    files: ['**/*.test.ts'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
   }
 );
