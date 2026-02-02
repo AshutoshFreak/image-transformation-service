@@ -4,31 +4,7 @@ AWS infrastructure for deploying the Image Transformation Service.
 
 ## Architecture
 
-```
-                    ┌──────────────┐
-                    │  CloudFront  │  (HTTPS CDN)
-                    └──────┬───────┘
-                           │
-                    ┌──────▼───────┐
-                    │     ALB      │  (Application Load Balancer)
-                    └──────┬───────┘
-                           │
-              ┌────────────▼────────────┐
-              │      ECS Fargate        │
-              │  ┌─────────┬─────────┐  │
-              │  │ Frontend│ Backend │  │
-              │  │ (nginx) │ (node)  │  │
-              │  └─────────┴─────────┘  │
-              └─────────────────────────┘
-                           │
-              ┌────────────┴────────────┐
-              │                         │
-       ┌──────▼──────┐          ┌───────▼───────┐
-       │  Cloudinary │          │   Clipdrop    │
-       │  (storage)  │          │ (background   │
-       └─────────────┘          │   removal)    │
-                                └───────────────┘
-```
+![Architecture Diagram](https://drive.google.com/file/d/1s-dnPN3b94dPC8vjxvOA6m0ejoK74ZWi)
 
 ## Resources Created
 
