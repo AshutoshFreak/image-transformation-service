@@ -2,6 +2,8 @@
 
 A full-stack application for uploading images, removing backgrounds, applying horizontal flip transformations, and managing the resulting images.
 
+**Live Demo:** https://d5smvf35ewesl.cloudfront.net
+
 ## Features
 
 - **Image Upload**: Drag-and-drop or click-to-upload interface
