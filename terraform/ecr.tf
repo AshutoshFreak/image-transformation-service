@@ -2,6 +2,7 @@
 resource "aws_ecr_repository" "backend" {
   name                 = "${var.app_name}-backend"
   image_tag_mutability = "MUTABLE"
+  force_delete         = true
 
   # Clean up untagged images to stay within free tier
   image_scanning_configuration {
@@ -12,6 +13,7 @@ resource "aws_ecr_repository" "backend" {
 resource "aws_ecr_repository" "frontend" {
   name                 = "${var.app_name}-frontend"
   image_tag_mutability = "MUTABLE"
+  force_delete         = true
 
   image_scanning_configuration {
     scan_on_push = false
