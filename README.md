@@ -14,7 +14,7 @@ For production, the app runs on AWS ECS Fargate behind an Application Load Balan
 
 ## Architecture
 
-![Architecture Diagram](https://drive.google.com/file/d/1s-dnPN3b94dPC8vjxvOA6m0ejoK74ZWi)
+![Architecture Diagram](https://drive.google.com/file/d/1s-dnPN3b94dPC8vjxvOA6m0ejoK74ZWi/view?usp=sharing)
 
 ## CI/CD
 
